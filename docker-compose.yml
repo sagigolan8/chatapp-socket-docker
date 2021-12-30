@@ -1,0 +1,16 @@
+version: '2'  # optional since v1.27.0
+services:
+  server:
+    build: 
+      context: ./back
+    command: npm start
+    ports: 
+      - "4000:4000"
+  client:
+    build: 
+      context: ./front
+    command: npm start
+    depends_on:
+      - server
+    ports: 
+      - "3000:3000"
