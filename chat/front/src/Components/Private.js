@@ -28,14 +28,19 @@ export default function Private({socket,userName, chatPerson, setPrivateRoom}) {
       };
     
       useEffect(() => {
+        
         socket.on("receive private message", (data) => {
             console.log(data);
           setMessagesList((list) => [...list, data]);
           return ()=>{
-
+            
           }
         });
       }, [socket]);
+
+      useEffect(() => {
+        setMessagesList([])
+      }, [chatPerson])
 
     return (
     <div className="chat-window">
@@ -47,7 +52,7 @@ export default function Private({socket,userName, chatPerson, setPrivateRoom}) {
         </Button>
         </div>
         <div className="chat-header">
-          <p>Live Chat With {chatPerson} </p>
+          <p>Live Chat With : <b>{chatPerson}</b> </p>
         </div>
         <div className="chat-body">
 

@@ -187,3 +187,6 @@
   .hide {
     opacity: 0 !important;
   }
+  li:hover{
+    background-color: rgba(243, 239, 239, 0.664);
+  }

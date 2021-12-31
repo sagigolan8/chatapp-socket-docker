@@ -8,6 +8,7 @@ import Message from "./Message";
 import SendIcon from '@mui/icons-material/Send'
 import User from "./User";
 import Private from "./Private";
+import { Container, Box } from "@mui/material";
 
 export default function Chat() {
     const navigate = useNavigate()
@@ -52,26 +53,38 @@ export default function Chat() {
       socketRef.current.emit("message", { name, message });
       setNewMessage({ message: "" });
     };
-  
-    const logout = (userName) => {
-      navigate('/')
-    }
 
     const privateMessage = ( name )=>{
-      // navigate('/private',{ state: {
-      //   socketRef,
-      //   userName,
-      //   room : 1
-      // } })
       socketRef.current.emit("join room", `${userName}${name}`)
       setPrivateRoom(true)
       setChatPerson(name)
     }
 
+    const renderAllChat = ()=>{
+      return (
+      <form onSubmit={onMessageSubmit}>
+        
+      {renderChat()}
+        <div>
+          <TextField
+            name="message"
+            onChange={(e) => onTextChange(e)}
+            value={newMessage.message}
+            id="outlined-multiline-static"
+            variant="outlined"
+            label="Message"
+            autoComplete="off"
+          />
+        <Button type="submit">
+          <SendIcon fontSize="large"/>
+        </Button>
+        </div>
+      </form>
+      )
+    }
 
     const renderChat = () => {
       return(
-    <div>
       <div>
          {messagesList.map(({ name, message }) => (
             <div key={nanoid()}>
@@ -79,8 +92,12 @@ export default function Chat() {
             </div>
           ))}
       </div>
-
-      <div style={{textAlign:'left'}}>
+        )
+    };
+    
+    const renderUsers = ()=>{
+      return (
+      <ul className="list-group" style={{textAlign:'left'}}>
         {
         users.map(
           ({name,id})=>
@@ -92,49 +109,42 @@ export default function Chat() {
            name={name}
            />
           )}
-      </div>
-
-  </div>
-        )
-    };
-  
+      </ul>
+          )
+    }
 
 
     return (
       <div  style={{textAlign:'center'}}>
-        <button
-        onClick={()=>logout(userName)}
-        style={{float:'right'}}
-        className="btn btn-primary"
-        >Logout
-        </button>
+      <Container
+        style={{
+          display: "flex",
+          alignContent: "center",
+          justifyContent: "center"
+        }}
+      >
+        <Box >
+        <Typography 
+          variant="h5"
+          >
+          Users
+          </Typography>
+        {renderUsers()}
+        </Box>
+        <Box sx={{
+        width: 700,
+        height: 100
+          }}
+        >
         <div className="name-field">
-          <Typography style={{color:"#3f51b5"}}
-          variant="h4"
+          <h1 style={{color:"#3f51b5"}}
           >
           Welcome {userName}!
-          </Typography>
+          </h1>
+          <br/>
         </div>
         { !privateRoom ? (
-
-        <form onSubmit={onMessageSubmit}>
-
-        {renderChat()}
-          <div>
-            <TextField
-              name="message"
-              onChange={(e) => onTextChange(e)}
-              value={newMessage.message}
-              id="outlined-multiline-static"
-              variant="outlined"
-              label="Message"
-              autoComplete="off"
-            />
-          <Button type="submit">
-            <SendIcon fontSize="large"/>
-          </Button>
-          </div>
-        </form>
+          renderAllChat()
         )
         :
         (
@@ -148,6 +158,9 @@ export default function Chat() {
         </div>
         ) 
           }
+          </Box>
+          </Container>
       </div>
+
     );
 }

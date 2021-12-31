@@ -2,13 +2,13 @@ version: '2'  # optional since v1.27.0
 services:
   server:
     build: 
-      context: ./back
+      context: ./chat/back
     command: npm start
     ports: 
       - "4000:4000"
   client:
     build: 
-      context: ./front
+      context: ./chat/front
     command: npm start
     depends_on:
       - server
